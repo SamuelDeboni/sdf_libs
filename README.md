@@ -2,7 +2,7 @@
 
 A collection of single header libs for c and c++ wrote by me
 
-*This are just somes libraries I use myself for hobbie project, use at your own discretion.*
+**_This libraries are not used on any real product, I cannot assure the quality of the code, use at your own discretion._**
 
 Library | Version | Description
 --------|---------|------------
