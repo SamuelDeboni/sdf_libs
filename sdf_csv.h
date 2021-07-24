@@ -8,6 +8,17 @@
 #include "sdf_string.h"
 #include <stdint.h>
 
+#ifndef SDF_print
+
+#if (defined(SDF_PRINT_ERRORS) && !defined(SDF_NO_CRT))
+#define SDF_print printf
+#else
+#define SDF_print(...)
+#endif
+
+#endif // SDF_print
+
+
 #ifndef SDF_NO_CRT
 #include <stdlib.h>
 
@@ -19,8 +30,7 @@
 #define SDF_free free
 #endif
 
-#endif
-
+#endif // SDF_NO_CRT
 
 #ifndef SDF_BOOL
 #define SDF_BOOL
@@ -28,6 +38,9 @@ typedef unsigned int SdfBool;
 #define SDF_TRUE  (0 == 0)
 #define SDF_FALSE (0 == 1)
 #endif
+
+
+
 
 typedef struct {
     char separator;
@@ -57,7 +70,13 @@ typedef struct {
 #ifdef __cplusplus
 extern "C" {
 #endif
+    
+#ifndef SDF_NO_CRT
     extern SdfCsv sdf_csv_open_parse(char *file_path, SdfCsvOptions options);
+    extern SdfCsv sdf_csv_parse(uint8_t *data, uint64_t data_size,SdfCsvOptions options);
+#endif
+    extern SdfCsv sdf_csv_get_size(uint8_t *data, uint64_t data_size,SdfCsvOptions options);
+    extern void sdf_parse_with_known_size(SdfCsv *csv);
     extern SdfString sdf_csv_get_cell(SdfCsv csv, uint64_t column, uint64_t row);
     extern SdfRow sdf_csv_get_row(SdfCsv csv, uint64_t row);
 #ifdef __cplusplus
@@ -69,6 +88,11 @@ extern "C" {
 
 
 #ifdef SDF_CSV_IMPLEMENTATION
+
+
+
+#ifndef SDF_NO_CRT
+
 
 static uint8_t *
 sdf_read_file_all(char *path, uint64_t *size)
@@ -96,13 +120,41 @@ SdfCsv
 sdf_csv_open_parse(char *file_path, SdfCsvOptions options)
 {
     SdfCsv result = {};
+    uint64_t data_size = 0; 
+    
+    uint8_t *data = sdf_read_file_all(file_path, &data_size);
+    if (data == 0) {
+        return result;
+    }
+    
+    result = sdf_csv_parse(data, data_size, options);
+    
+    return result;
+}
+
+
+SdfCsv
+sdf_csv_parse(uint8_t *data, uint64_t data_size, SdfCsvOptions options)
+{
+    SdfCsv result = sdf_csv_get_size(data, data_size, options);
+    result.cells = (SdfString *)SDF_malloc(result.cell_count * sizeof(SdfString));
+    sdf_parse_with_known_size(&result);
+    return result;
+}
+
+
+#endif
+
+
+SdfCsv
+sdf_csv_get_size(uint8_t *data, uint64_t data_size,SdfCsvOptions options)
+{
+    SdfCsv result = {};
     
     result.options = options;
     
-    result.mem = sdf_read_file_all(file_path, &result.mem_size);
-    if (result.mem == 0) {
-        return result;
-    }
+    result.mem = data;
+    result.mem_size = data_size;
     
     int first_line = 0;
     for (uint64_t i = 0; i < result.mem_size; i++) {
@@ -124,9 +176,8 @@ sdf_csv_open_parse(char *file_path, SdfCsvOptions options)
             
             
             if (result.row_count * result.column_count != result.cell_count) {
-#ifdef SDF_PRINT_ERRORS
-                printf("Error, line %ld has does not have the correct column count\n", result.row_count);
-#endif
+                
+                SDF_print("Error, line %ld has does not have the correct column count\n", result.row_count);
                 
                 SDF_free(result.mem);
                 
@@ -149,30 +200,29 @@ sdf_csv_open_parse(char *file_path, SdfCsvOptions options)
     }
     
     if (result.row_count * result.column_count != result.cell_count) {
-#ifdef SDF_PRINT_ERRORS
-        printf("Error, last line has does not have the correct column count\n");
-#endif
+        SDF_print("Error, last line has does not have the correct column count\n");
         
         SDF_free(result.mem);
         
         return result;
     }
     
-    result.cells = (SdfString *)SDF_malloc(result.cell_count * sizeof(SdfString));
-    
-    SdfString tmp = { result.mem_size, result.mem_size, (char *)result.mem };
-    SdfString *cell = result.cells;
-    for (uint64_t ri = 0; ri < result.row_count; ri++) {
+    return result;
+}
+
+void
+sdf_parse_with_known_size(SdfCsv *csv)
+{
+    SdfString tmp = { csv->mem_size, csv->mem_size, (char *)csv->mem };
+    SdfString *cell = csv->cells;
+    for (uint64_t ri = 0; ri < csv->row_count; ri++) {
         
         SdfString line = sdf_get_line(&tmp);
-        for (uint64_t ci = 0; ci < result.column_count; ci++) {
-            *cell = sdf_next_token(&line, options.separator);
+        for (uint64_t ci = 0; ci < csv->column_count; ci++) {
+            *cell = sdf_next_token(&line, csv->options.separator);
             cell++;
         }
     }
-    
-    
-    return result;
 }
 
 
@@ -203,4 +253,4 @@ sdf_csv_get_row(SdfCsv csv, uint64_t row)
     return result;
 }
 
-#endif
+#endif // SDF_CSV_IMPLEMENTATION
