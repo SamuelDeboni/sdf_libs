@@ -123,6 +123,9 @@ sdf_csv_open_parse(char *file_path, SdfCsvOptions options)
     }
     
     result = sdf_csv_parse(data, data_size, options);
+    if (!result.mem) {
+        SDF_free(data);
+    }
     
     return result;
 }
@@ -132,8 +135,10 @@ SdfCsv
 sdf_csv_parse(uint8_t *data, uint64_t data_size, SdfCsvOptions options)
 {
     SdfCsv result = sdf_csv_get_size(data, data_size, options);
-    result.cells = (SdfString *)SDF_malloc(result.cell_count * sizeof(SdfString));
-    sdf_parse_with_known_size(&result);
+    if (result.mem) {
+        result.cells = (SdfString *)SDF_malloc(result.cell_count * sizeof(SdfString));
+        sdf_parse_with_known_size(&result);
+    }
     return result;
 }
 
@@ -173,10 +178,7 @@ sdf_csv_get_size(uint8_t *data, uint64_t data_size,SdfCsvOptions options)
             if (result.row_count * result.column_count != result.cell_count) {
                 
                 SDF_print("Error, line %ld has does not have the correct column count\n", result.row_count);
-                
-                SDF_free(result.mem);
-                
-                return result;
+                return (SdfCsv){};
             }
             
         }
@@ -196,10 +198,7 @@ sdf_csv_get_size(uint8_t *data, uint64_t data_size,SdfCsvOptions options)
     
     if (result.row_count * result.column_count != result.cell_count) {
         SDF_print("Error, last line has does not have the correct column count\n");
-        
-        SDF_free(result.mem);
-        
-        return result;
+        return (SdfCsv){};
     }
     
     return result;
