@@ -5,11 +5,6 @@
 
 #include <stdint.h>
 
-#ifndef SDF_NO_STDIO
-#include <stdio.h>
-
-#define SDF_assert(x)
-
 #ifndef SDF_BOOL
 #define SDF_BOOL
 typedef unsigned int SdfBool;
@@ -18,10 +13,9 @@ typedef unsigned int SdfBool;
 #endif
 
 
-#ifndef SDF_ASSERT_H
-#define SDF_ASSERT_H
-
+#define SDF_assert(x)
 #ifdef SDF_ASSERT
+#include <stdio.h>
 #include <stdlib.h>
 #define SDF_assert(x) \
 if(!(x)) { \
@@ -29,9 +23,6 @@ printf("Assert failed %d:%s\n", __LINE__, __FILE__); \
 exit(42); \
 }
 #endif // SDF_ASSERT
-#endif // SDF_ASSERT_H 
-
-#endif // SDF_NO_STDIO
 
 
 #define SDF_SFOR(s) for (uint32_t i = 0, it = s.ptr[0]; \
@@ -287,3 +278,5 @@ sdf_strcmp(SdfString s1, SdfString s2)
 
 
 #endif
+
+#undef SDF_assert
