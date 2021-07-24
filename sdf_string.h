@@ -4,18 +4,11 @@
 #define SDF_STRING_H
 
 #include <stdint.h>
-#include <stdlib.h>
 
 #ifndef SDF_NO_STDIO
 #include <stdio.h>
 
-#ifndef SDF_malloc
-#define SDF_malloc malloc
-#endif
-
-#ifndef SDF_free
-#define SDF_free free
-#endif
+#define SDF_assert(x)
 
 #ifndef SDF_BOOL
 #define SDF_BOOL
@@ -24,22 +17,21 @@ typedef unsigned int SdfBool;
 #define SDF_FALSE (0 == 1)
 #endif
 
-#endif
 
 #ifndef SDF_ASSERT_H
 #define SDF_ASSERT_H
 
-#ifndef SDF_NOASSERT
-#define SDF_ASSERT(x) \
+#ifdef SDF_ASSERT
+#include <stdlib.h>
+#define SDF_assert(x) \
 if(!(x)) { \
 printf("Assert failed %d:%s\n", __LINE__, __FILE__); \
 exit(42); \
 }
-#else
-#define SDF_ASSERT(x)
-#endif
+#endif // SDF_ASSERT
+#endif // SDF_ASSERT_H 
 
-#endif
+#endif // SDF_NO_STDIO
 
 
 #define SDF_SFOR(s) for (uint32_t i = 0, it = s.ptr[0]; \
@@ -152,7 +144,7 @@ sdf_build_string_append_literal(SdfString *s, char *ls)
 void
 sdf_build_string_append(SdfString *s1, SdfString s2)
 {
-    SDF_ASSERT(s1->capacity >= (s2.len + s1->len));
+    SDF_assert(s1->capacity >= (s2.len + s1->len));
     
     SDF_SFOR(s2) {
         s1->ptr[i + s1->len] = it;
@@ -162,7 +154,7 @@ sdf_build_string_append(SdfString *s1, SdfString s2)
 
 void
 sdf_build_string_copy(SdfString *s1, SdfString s2) {
-    SDF_ASSERT(s1->capacity >= s2.len);
+    SDF_assert(s1->capacity >= s2.len);
     
     s1->len = s2.len;
     SDF_SFOR(s2) {
