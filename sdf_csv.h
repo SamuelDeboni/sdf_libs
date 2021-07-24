@@ -3,21 +3,19 @@
 #ifndef SDF_CSV_H
 #define SDF_CSV_H
 
-#include <stdio.h>
-
 #include "sdf_string.h"
 #include <stdint.h>
 
 #ifndef SDF_print
 
 #if (defined(SDF_PRINT_ERRORS) && !defined(SDF_NO_CRT))
+#include <stdio.h>
 #define SDF_print printf
 #else
 #define SDF_print(...)
 #endif
 
 #endif // SDF_print
-
 
 #ifndef SDF_NO_CRT
 #include <stdlib.h>
@@ -38,9 +36,6 @@ typedef unsigned int SdfBool;
 #define SDF_TRUE  (0 == 0)
 #define SDF_FALSE (0 == 1)
 #endif
-
-
-
 
 typedef struct {
     char separator;

@@ -7,9 +7,9 @@
 #include "../sdf_string.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 char s_buffer[512];
-
 
 static void
 print_csv(SdfCsv csv)
