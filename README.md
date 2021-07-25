@@ -9,4 +9,4 @@ Library | Version | Description
 **[sdf_string.h](sdf_string.h)**     | 0.1 | A string manipulation lib
 **[sdf_csv_parser.h](sdf_string.h)** | 0.1 | a simple csv parser
 **[sdf_csv_mem.h](sdf_mem.h)** | 0.1 | simple memory arena
-**[sdf_plataform.h](plataform/sdf_plataform.h) | 0.1 | Collection of plataform independet functions
+**[sdf_plataform](sdf_plataform/)** | 0.1 | Collection of plataform independet functions
