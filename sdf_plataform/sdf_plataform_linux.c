@@ -1,5 +1,8 @@
 #include "sdf_plataform.h"
 
+
+#ifdef SDF_ALLOCATORS
+
 #include <sys/mman.h>
 
 void *
@@ -14,3 +17,5 @@ sdf_virtual_free(void *mem, SdfU64 length)
 {
     return munmap(mem, length);
 }
+
+#endif // SDF_ALLOCATORS

@@ -30,8 +30,11 @@ typedef uint32_t SdfBool;
 #ifdef __cplusplus
 extern "C" {
 #endif
+    
+#ifdef SDF_ALLOCATORS
     void *sdf_virtual_alloc(SdfU64 size);
-    void sdf_free(void *mem);
+    void sdf_virtual_free(void *mem);
+#endif // SDF_ALLOCATORS
     
 #ifdef __cplusplus
 }
