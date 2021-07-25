@@ -7,23 +7,10 @@
 
 #ifndef SDF_BOOL
 #define SDF_BOOL
-typedef unsigned int SdfBool;
+typedef unsigned uint32_t SdfBool;
 #define SDF_TRUE  (0 == 0)
 #define SDF_FALSE (0 == 1)
 #endif
-
-
-#define SDF_assert(x)
-#ifdef SDF_ASSERT
-#include <stdio.h>
-#include <stdlib.h>
-#define SDF_assert(x) \
-if(!(x)) { \
-printf("Assert failed %d:%s\n", __LINE__, __FILE__); \
-exit(42); \
-}
-#endif // SDF_ASSERT
-
 
 #define SDF_SFOR(s) for (uint32_t i = 0, it = s.ptr[0]; \
 i < s.len; \
@@ -62,22 +49,22 @@ sdf_offset_string(SdfString *s, int32_t offset)
 #ifdef __cplusplus
 extern "C" {
 #endif
-    extern SdfBuildStringError sdf_build_string_from_literal(SdfString *s, char *ls);
-    extern SdfBuildStringError sdf_build_string_append_literal(SdfString *s, char *ls);
+    SdfBuildStringError sdf_build_string_from_literal(SdfString *s, char *ls);
+    SdfBuildStringError sdf_build_string_append_literal(SdfString *s, char *ls);
     
-    extern SdfString sdf_next_token(SdfString *s, char separator);
-    extern SdfString sdf_get_line(SdfString *s);
-    extern SdfString sdf_literal_to_string(char *sl);
-    extern SdfString sdf_string_between(SdfString s, SdfString first, SdfString second);
+    SdfString sdf_next_token(SdfString *s, char separator);
+    SdfString sdf_get_line(SdfString *s);
+    SdfString sdf_literal_to_string(char *sl);
+    SdfString sdf_string_between(SdfString s, SdfString first, SdfString second);
     
-    extern SdfSubstring sdf_substring(SdfString s, SdfString sub);
-    extern SdfBool sdf_strcmp(SdfString s1, SdfString s2);
+    SdfSubstring sdf_substring(SdfString s, SdfString sub);
+    SdfBool sdf_strcmp(SdfString s1, SdfString s2);
     
-    extern void sdf_build_string_append(SdfString *s1, SdfString s2);
-    extern void sdf_build_string_copy(SdfString *s1, SdfString s2);
-    extern void sdf_remove_trailing_spaces(SdfString *s);
-    extern void sdf_remove_leading_spaces(SdfString *s);
-    extern void sdf_to_cstring(char *buffer, size_t capacity, SdfString string);
+    int sdf_build_string_append(SdfString *s1, SdfString s2);
+    int sdf_build_string_copy(SdfString *s1, SdfString s2);
+    void sdf_remove_trailing_spaces(SdfString *s);
+    void sdf_remove_leading_spaces(SdfString *s);
+    void sdf_to_cstring(char *buffer, uint64_t capacity, SdfString string);
     
 #ifdef __cplusplus
 }
@@ -91,7 +78,7 @@ extern "C" {
 // ===== Functions =====
 
 void
-sdf_to_cstring(char *buffer, size_t capacity, SdfString string)
+sdf_to_cstring(char *buffer, uint64_t capacity, SdfString string)
 {
     int i = 0;
     for (; i < string.len && i < capacity - 1; i++) {
@@ -132,25 +119,29 @@ sdf_build_string_append_literal(SdfString *s, char *ls)
     return SdfBuildStringError_None;
 }
 
-void
+int
 sdf_build_string_append(SdfString *s1, SdfString s2)
 {
-    SDF_assert(s1->capacity >= (s2.len + s1->len));
+    if (s1->capacity < (s2.len + s1->len)) return 1;
     
     SDF_SFOR(s2) {
         s1->ptr[i + s1->len] = it;
     }
     s1->len += s2.len;
+    
+    return 0;
 }
 
-void
+int
 sdf_build_string_copy(SdfString *s1, SdfString s2) {
-    SDF_assert(s1->capacity >= s2.len);
+    if (s1->capacity < s2.len) return 1;
     
     s1->len = s2.len;
     SDF_SFOR(s2) {
         s1->ptr[i] = it;
     }
+    
+    return 0;
 }
 
 SdfString

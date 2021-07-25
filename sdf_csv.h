@@ -67,13 +67,13 @@ extern "C" {
 #endif
     
 #ifndef SDF_NO_CRT
-    extern SdfCsv sdf_csv_open_parse(char *file_path, SdfCsvOptions options);
-    extern SdfCsv sdf_csv_parse(uint8_t *data, uint64_t data_size,SdfCsvOptions options);
+    SdfCsv sdf_csv_open_parse(char *file_path, SdfCsvOptions options);
+    SdfCsv sdf_csv_parse(uint8_t *data, uint64_t data_size,SdfCsvOptions options);
 #endif
-    extern SdfCsv sdf_csv_get_size(uint8_t *data, uint64_t data_size,SdfCsvOptions options);
-    extern void sdf_parse_with_known_size(SdfCsv *csv);
-    extern SdfString sdf_csv_get_cell(SdfCsv csv, uint64_t column, uint64_t row);
-    extern SdfRow sdf_csv_get_row(SdfCsv csv, uint64_t row);
+    SdfCsv sdf_csv_get_size(uint8_t *data, uint64_t data_size,SdfCsvOptions options);
+    void sdf_parse_with_known_size(SdfCsv *csv);
+    SdfString sdf_csv_get_cell(SdfCsv csv, uint64_t column, uint64_t row);
+    SdfRow sdf_csv_get_row(SdfCsv csv, uint64_t row);
 #ifdef __cplusplus
 }
 #endif
