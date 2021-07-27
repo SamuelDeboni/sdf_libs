@@ -16,6 +16,10 @@ typedef unsigned uint32_t SdfBool;
 i < s.len; \
 it = s.ptr[++i])
 
+#ifndef SDF_assert
+#define SDF_assert(x)
+#endif
+
 // ===== Definitions =====
 typedef struct SdfString
 {

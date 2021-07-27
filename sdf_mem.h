@@ -3,6 +3,10 @@
 #ifndef SDF_MEM_H
 #define SDF_MEM_H
 
+#ifndef SDF_assert
+#define SDF_assert(x)
+#endif
+
 #ifndef SDF_DEFAULT_ALIGNMENT
 #define SDF_DEFAULT_ALIGNMENT (2*sizeof(void *))
 #endif
@@ -56,7 +60,7 @@ extern "C" {
 
 #ifdef SDF_MEM_IMPLEMENTATION
 
-static int
+inline int
 sdf_is_power_of_two(SdfUPtr x) {
 	return (x & (x-1)) == 0;
 }
@@ -72,7 +76,7 @@ sdf_memset8(void *mem, SdfU8 value, SdfU64 size)
 SdfUPtr
 sdf_align_forward(SdfUPtr ptr, SdfU64 align)
 {
-    // TODO(samuel): Assert size is power of two
+    SDF_assert(sdf_is_power_of_two(align));
     
     SdfUPtr p = ptr;
     SdfUPtr a = (SdfUPtr)align;
