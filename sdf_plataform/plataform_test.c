@@ -1,4 +1,5 @@
-#include "sdf_plataform_linux.c"
+#define SDF_ALLOCATORS
+#include "sdf_plataform_win.c"
 
 #include <stdio.h>
 
@@ -7,7 +8,7 @@ main()
 {
     SdfU64 len = 4096;
     SdfU32 *mem = (SdfU32 *)sdf_virtual_alloc(len * sizeof(SdfU32));
-    printf("mem = %lxh\n", (SdfU64)mem);
+    printf("mem = %llx\n", (SdfU64)mem);
     
     for (int i = 0; i < len; i++) {
         mem[i] = i;
