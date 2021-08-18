@@ -24,7 +24,6 @@ it = s.ptr[++i])
 typedef struct SdfString
 {
     uint32_t len;
-    uint32_t capacity;
     char *ptr;
 } SdfString;
 
@@ -47,14 +46,20 @@ sdf_offset_string(SdfString *s, int32_t offset)
 {
     s->ptr += offset;
     s->len -= offset;
-    s->capacity -= offset;
 }
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+    void sdf_to_cstring(char *buffer, uint64_t capacity, SdfString string);
+    
+#if 0
     SdfBuildStringError sdf_build_string_from_literal(SdfString *s, char *ls);
     SdfBuildStringError sdf_build_string_append_literal(SdfString *s, char *ls);
+    int sdf_build_string_append(SdfString *s1, SdfString s2);
+    int sdf_build_string_copy(SdfString *s1, SdfString s2);
+    
+#endif
     
     SdfString sdf_next_token(SdfString *s, char separator);
     SdfString sdf_get_line(SdfString *s);
@@ -64,8 +69,6 @@ extern "C" {
     SdfSubstring sdf_substring(SdfString s, SdfString sub);
     SdfBool sdf_strcmp(SdfString s1, SdfString s2);
     
-    int sdf_build_string_append(SdfString *s1, SdfString s2);
-    int sdf_build_string_copy(SdfString *s1, SdfString s2);
     void sdf_remove_trailing_spaces(SdfString *s);
     void sdf_remove_leading_spaces(SdfString *s);
     void sdf_to_cstring(char *buffer, uint64_t capacity, SdfString string);
@@ -92,6 +95,7 @@ sdf_to_cstring(char *buffer, uint64_t capacity, SdfString string)
     buffer[i] = 0;
 }
 
+#if 0
 SdfBuildStringError
 sdf_build_string_from_literal(SdfString *s, char *ls)
 {
@@ -123,6 +127,7 @@ sdf_build_string_append_literal(SdfString *s, char *ls)
     return SdfBuildStringError_None;
 }
 
+
 int
 sdf_build_string_append(SdfString *s1, SdfString s2)
 {
@@ -147,6 +152,7 @@ sdf_build_string_copy(SdfString *s1, SdfString s2) {
     
     return 0;
 }
+#endif
 
 SdfString
 sdf_next_token(SdfString *s, char separator)
@@ -157,7 +163,6 @@ sdf_next_token(SdfString *s, char separator)
     uint32_t max_len = s->len;
     while ((result.len < max_len) && (*(s->ptr) != separator)) {
         result.len++;
-        s->capacity--;
         s->len--;
         s->ptr++;
     }
@@ -165,7 +170,6 @@ sdf_next_token(SdfString *s, char separator)
     if (s->len != 0) {
         s->ptr++;
         s->len--;
-        s->capacity--;
     }
     
     return result;
@@ -189,7 +193,6 @@ sdf_literal_to_string(char *sl)
     result.ptr = (char *)sl;
     while (*(sl++) != 0) {
         result.len++;
-        result.capacity++;
     }
     return result;
 }
@@ -230,7 +233,6 @@ sdf_string_between(SdfString s, SdfString first, SdfString second)
     sub = sdf_substring(result, second);
     
     result.len = sub.offset;
-    result.capacity = sub.offset;
     
     return result;
 }

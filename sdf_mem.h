@@ -91,12 +91,13 @@ sdf_align_forward(SdfUPtr ptr, SdfU64 align)
 SdfArena
 sdf_arena_create(void *buffer, SdfUPtr buffer_size)
 {
-    return SdfArena{buffer, buffer_size};
+    SdfArena result = {buffer, buffer_size};
+    return result;
 }
 
 
 void *
-sdf_arena_alloc_align(SdfArena *arena; SdfUPtr size, SdfU64 align)
+sdf_arena_alloc_align(SdfArena *arena, SdfUPtr size, SdfU64 align)
 {
     void *result = 0;
     
@@ -130,7 +131,7 @@ sdf_arena_free(SdfArena *arena, void *ptr) {
 void
 sdf_arena_free_all(SdfArena *arena)
 {
-    sdf_memset8(arena->buffer_size, 0, arena->offset);
+    sdf_memset8(arena->buffer, 0, arena->buffer_size);
     arena->offset = 0;
 }
 
