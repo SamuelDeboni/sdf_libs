@@ -17,6 +17,8 @@ typedef uint16_t SdfU16;
 typedef uint32_t SdfU32;
 typedef uint64_t SdfU64;
 
+typedef uintptr_t SdfUPtr;
+
 #endif // SDF_INT
 
 #ifndef SDF_BOOL
