@@ -7,7 +7,7 @@
 
 #ifndef SDF_BOOL
 #define SDF_BOOL
-typedef unsigned uint32_t SdfBool;
+typedef uint32_t SdfBool;
 #define SDF_TRUE  (0 == 0)
 #define SDF_FALSE (0 == 1)
 #endif
