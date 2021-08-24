@@ -207,7 +207,7 @@ sdf_csv_get_size(uint8_t *data, uint64_t data_size,SdfCsvOptions options)
 void
 sdf_parse_with_known_size(SdfCsv *csv)
 {
-    SdfString tmp = { csv->mem_size, csv->mem_size, (char *)csv->mem };
+    SdfString tmp = { csv->mem_size, (char *)csv->mem };
     SdfString *cell = csv->cells;
     for (uint64_t ri = 0; ri < csv->row_count; ri++) {
         
