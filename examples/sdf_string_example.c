@@ -18,31 +18,25 @@ main(int arg_count, char **arg_vector)
     char buffer[256];
     SdfString string = {
         .len = 0,
-        .capacity = 256,
         .ptr = buffer,
     };
     
-    sdf_build_string_from_literal(&string, "batatinha");
     printf("sting len = %d\n", string.len);
-    printf("sting capacity = %d\n", string.capacity);
     
     print_string(string);
     
     printf("\nAppending yay\n");
-    sdf_build_string_append_literal(&string, ", yay");
     print_string(string);
     
     SdfString string2 = string;
     printf("\nAppending yay until error\n");
     
-    while (!sdf_build_string_append_literal(&string2, ", yay"));
     printf("\nString\n");
     print_string(string);
     
     printf("\nString 2\n");
     print_string(string2);
     
-    string.len = string.capacity;
     printf("\nString\n");
     print_string(string);
     
@@ -54,14 +48,11 @@ main(int arg_count, char **arg_vector)
     printf("\nString\n");
     print_string(string);
     
-    sdf_build_string_copy(&string2, string);
     
     printf("\nString 2\n");
     print_string(string2);
     
-    sdf_build_string_append(&string2, string);
     
-    sdf_build_string_from_literal(&string2, "yay batata potato");
     printf("\nString 2\n");
     print_string(string2);
     
@@ -71,7 +62,6 @@ main(int arg_count, char **arg_vector)
         print_string(tok);
     } while (string2.len > 0);
     
-    sdf_build_string_from_literal(&string2, "yay batata potato yay");
     SdfSubstring sub_string = sdf_substring(string2, sdf_literal_to_string("batata"));
     
     printf("Substring = [%d : %d]\n", sub_string.offset, sub_string.len);
