@@ -34,8 +34,8 @@ extern "C" {
 #endif
     
 #ifdef SDF_ALLOCATORS
-    void *sdf_virtual_alloc(SdfU64 size);
-    int sdf_virtual_free(void *mem, SdfU64 length);
+    void *sdf_alloc(SdfU64 size);
+    int sdf_free(void *mem, SdfU64 length);
 #endif // SDF_ALLOCATORS
     
 #ifdef __cplusplus
