@@ -7,7 +7,7 @@ int
 main()
 {
     SdfU64 len = 4096;
-    SdfU32 *mem = (SdfU32 *)sdf_virtual_alloc(len * sizeof(SdfU32));
+    SdfU32 *mem = (SdfU32 *)sdf_alloc(len * sizeof(SdfU32));
     printf("mem = %llx\n", (SdfU64)mem);
     
     for (int i = 0; i < len; i++) {
@@ -18,7 +18,7 @@ main()
         printf("mem[%d] = %d\n", i, mem[i]);
     }
     
-    sdf_virtual_free(mem, len * sizeof(SdfU32));
+    sdf_free(mem, len * sizeof(SdfU32));
     
     return 0;
 }
