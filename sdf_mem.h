@@ -106,7 +106,7 @@ sdf_arena_alloc_align(SdfArena *arena, SdfUPtr size, SdfU64 align)
     offset -= (SdfUPtr)arena->buffer;
     
     if (offset + size <= arena->buffer_size) {
-        result = arena->buffer + offset;
+        result = (SdfU8 *)arena->buffer + offset;
         arena->offset = offset + size;
         
         sdf_memset8(result, 0, size);
