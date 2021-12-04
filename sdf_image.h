@@ -51,11 +51,14 @@ typedef  struct {
 
 #undef PACK
 
+SdfImage sdf_image_from_tga_data(SdfU8 *tga_data, SdfU64 tga_data_len, SdfU8 *image_buffer);
+
+#endif //SDF_IMAGE_H
 
 #ifdef SDF_TGA_IMPLEMENTATION
 
 SdfImage
-image_from_tga_data(SdfU8 *tga_data, SdfU64 tga_data_len, SdfU8 *image_buffer)
+sdf_image_from_tga_data(SdfU8 *tga_data, SdfU64 tga_data_len, SdfU8 *image_buffer)
 {
     SdfImage im = {0};
     
@@ -129,4 +132,3 @@ image_from_tga_data(SdfU8 *tga_data, SdfU64 tga_data_len, SdfU8 *image_buffer)
 
 #endif // SDA_TGA_IMPLEMENTATION
 
-#endif //SDF_IMAGE_H
