@@ -34,6 +34,7 @@ typedef struct {
     void *buffer;
     SdfUPtr buffer_size;
     SdfUPtr offset;
+    SdfUPtr prev_offset;
 } SdfArena;
 
 
@@ -107,6 +108,7 @@ sdf_arena_alloc_align(SdfArena *arena, SdfUPtr size, SdfU64 align)
     
     if (offset + size <= arena->buffer_size) {
         result = arena->buffer + offset;
+        arena->prev_offset = arena->offset;
         arena->offset = offset + size;
         
         sdf_memset8(result, 0, size);
@@ -133,6 +135,7 @@ sdf_arena_free_all(SdfArena *arena)
 {
     sdf_memset8(arena->buffer, 0, arena->buffer_size);
     arena->offset = 0;
+    arena->prev_offset = 0;
 }
 
 #endif //SDF_MEM_IMPLEMENTATION
