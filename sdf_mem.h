@@ -45,8 +45,8 @@ extern "C" {
     SdfUPtr sdf_align_forward(SdfUPtr ptr, SdfU64 align);
     
     SdfArena sdf_arena_create(void *buffer, SdfUPtr buffer_size);
-    void *sdf_arena_alloc_align(SdfArena *arena, SdfU64 size, SdfU64 align);
-    void *sdf_arena_alloc(SdfArena *arena, SdfU64 size);
+    void *sdf_arena_alloc_align(SdfArena *arena, SdfUPtr size, SdfU64 align);
+    void *sdf_arena_alloc(SdfArena *arena, SdfUPtr size);
     void sdf_arena_free(SdfArena *arena, void *ptr);
     void sdf_arena_free_all(SdfArena *arena);
 #ifdef __cplusplus
